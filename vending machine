@@ -1,0 +1,82 @@
+items = {
+    'A1': {"name": "Zoi Ice Tea Lime Mint", "price": 3.50},
+    'A2': {"name": "Zoi Ice Tea Peach", "price": 3.50},
+    'A3': {"name": "Zoi Ice Tea Berry", "price": 3.50},
+    'A4': {"name": "Zoi Ice Tea Mango", "price": 3.50},
+    'A5': {"name": "Code Red Zero", "price": 3.50},
+    'B1': {"name": "Code Red", "price": 3.50},
+    'B2': {"name": "Sprite Lemon Mint", "price": 2.00},
+    'B3': {"name": "Gummy Cola Box", "price": 10.00},
+    'B4': {"name": "Maltesers", "price": 5.00},
+    'B5': {"name": "Twix", "price": 1.50},
+    'C1': {"name": "IceCream", "price": 2.00},
+    'C2': {"name": "Chicken Balalam Rice", "price": 10.00},#this is the database/dictionary from where the following code will get information
+    'C3': {"name": "Chicken Balalam Chicken", "price": 15.00},
+    'C4': {"name": "Bogy Rolls Strawberry", "price": 10.00},
+    'C5': {"name": "Bogy Rolls Mango", "price": 10.00},
+    'D1': {"name": "Bogy Rolls Blueberry", "price": 10.00},
+    'D2': {"name": "Bogy Rolls Oreo", "price": 10.00},
+    'D3': {"name": "Whammy Burger Beef", "price": 32.00},
+    'D4': {"name": "Whammy Burger Chicken", "price": 32.00},
+    'D5': {"name": "Blaban Nuttella Crepe", "price": 15.00},
+}
+
+totalprice = 0.00
+
+def transaction():    #this will come in later when the user is finnished selecting the items 
+    global totalprice   #gives the total price the ability to be changed and read
+    try:             #this "try" makes it so that you can enter anything but it has to be within the specifics given. in this code it needs to be a integer or a float
+        x = float(input('Input sufficient Saudi Riyals: '))
+        change = x - totalprice 
+        if change >= 0:
+            print(f"Here are your items, Enjoy! Your change: {change:.2f} SR")
+            totalprice = 0.00  
+        else:
+            print('You dont have enough money, please add more!')                 
+            transaction()
+    except ValueError:  #this is the end part of the "try" where it will print the code below it when the "try" input is not what its supposed to be which is integers and floats
+        print("Please enter a valid number!")
+        transaction()
+
+def vendingitem():  # Define the main shopping function
+    global totalprice  # Allow this function to modify the totalprice variable that exists outside
+    
+    print()
+    print("Here are the vailable items:")  # Display header for the menu
+    for code, item in items.items():  # Loop through each product in the items dictionary
+        # 'code' gets the key (like 'A1'), 'item' gets the value (the dictionary with name and price)
+        print(f"{code}: {item['name']} - {item['price']:.2f} SR")  # Print each item in format: A1: Zoi Ice Tea Lime Mint - 3.50 SR
+        # .2f formats the price to show exactly 2 decimal places
+    
+    print(f"\nCurrent total: {totalprice:.2f} SR")  # Show running total; \n adds a blank line before
+    cart = input("Enter the product code of the item you want to purchase: \nType 'EXIT' to checkout: ").upper()  
+    # Get user input, then convert it to uppercase so 'exit', 'Exit', or 'EXIT' all work the same
+    
+    if cart == 'EXIT':  # Check if user wants to finish shopping
+        if totalprice > 0:  # Only proceed to payment if they actually bought something
+            print(f"Transaction total: {totalprice:.2f} SR")  # Shows the final total
+            transaction()  # Call the payment function
+        else:  # If cart is empty (total is 0)
+            print("No items selected. Goodbye!")  
+        return  # Exit the function without calling it again
+    
+    if cart in items:  # Checks if the code entered exists in our items dictionary
+        totalprice += items[cart]['price']  # Add the item's price to the running total (same as: totalprice = totalprice + items[cart]['price'])
+        print(f"Added: {items[cart]['name']} for {items[cart]['price']:.2f} SR")  # Confirm what was added
+        print(f"New total: {totalprice:.2f} SR")  # Show updated total
+    else:  # If the code doesn't exist in items
+        print("Invalid product code. Please try again.")  # Tell user they made a mistake
+    
+    return vendingitem()  # Call the function again to let user add more items (this is recursion - the function calls itself)
+
+askingtousevendingmachine = True
+while askingtousevendingmachine == True:
+    asking = input("Do you want to buy from the Vending Machine? ")
+    if asking == "yes":
+        vendingitem()  # Start the entire program by calling the function for the first time
+        break
+    elif asking == "no":
+        print("Okay. Have a nice day.")
+        break
+    else:
+        print("Invalid input. Please enter valid answer (yes/no)")
