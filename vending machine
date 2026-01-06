@@ -31,9 +31,13 @@ def transaction():    #this will come in later when the user is finnished select
         if change >= 0:
             print(f"Here are your items, Enjoy! Your change: {change:.2f} SR")
             totalprice = 0.00  
-        else:
-            print('You dont have enough money, please add more!')                 
-            transaction()
+        elif x <= totalprice:
+            y = float(input('You dont have enough money, please add more! '))
+            insufficient_payment = y + x                
+            if insufficient_payment >= totalprice:
+                change2 = insufficient_payment - totalprice
+                print(f"Here are your items, Enjoy! Your change: {change2:.2f} SR")
+                totalprice = 0.00
     except ValueError:  #this is the end part of the "try" where it will print the code below it when the "try" input is not what its supposed to be which is integers and floats
         print("Please enter a valid number!")
         transaction()
@@ -42,7 +46,7 @@ def vendingitem():  # Define the main shopping function
     global totalprice  # Allow this function to modify the totalprice variable that exists outside
     
     print()
-    print("Here are the vailable items:")  # Display header for the menu
+    print("Here are the available items:")  # Display header for the menu
     for code, item in items.items():  # Loop through each product in the items dictionary
         # 'code' gets the key (like 'A1'), 'item' gets the value (the dictionary with name and price)
         print(f"{code}: {item['name']} - {item['price']:.2f} SR")  # Print each item in format: A1: Zoi Ice Tea Lime Mint - 3.50 SR
@@ -54,6 +58,7 @@ def vendingitem():  # Define the main shopping function
     
     if cart == 'EXIT':  # Check if user wants to finish shopping
         if totalprice > 0:  # Only proceed to payment if they actually bought something
+            print()
             print(f"Transaction total: {totalprice:.2f} SR")  # Shows the final total
             transaction()  # Call the payment function
         else:  # If cart is empty (total is 0)
